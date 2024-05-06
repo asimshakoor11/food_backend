@@ -10,16 +10,17 @@ app.use((req,res,next)=>{
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   next();
 })
 
-app.use(cors(
-  {
-    origin: ["https://food-frontend-sand.vercel.app/"],
-    methods: ["POST", "GET"],
-    credentials: true
-  }
-))
+// app.use(cors(
+//   {
+//     origin: ["https://food-frontend-sand.vercel.app/"],
+//     methods: ["POST", "GET"],
+//     credentials: true
+//   }
+// ))
 
 mongodb();
 
