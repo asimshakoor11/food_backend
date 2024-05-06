@@ -4,7 +4,7 @@ const port = 5000
 const mongodb = require('./db')
 
 app.use((req,res,next)=>{
-  res.setHeader("Access-Control-Allow-Origin","http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Origin","https://food-frontend-sand.vercel.app/");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
