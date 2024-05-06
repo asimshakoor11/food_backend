@@ -12,6 +12,14 @@ app.use((req,res,next)=>{
   next();
 })
 
+app.use(cors(
+  {
+    origin: ["https://food-frontend-sand.vercel.app/"],
+    methods: ["POST", "GET"],
+    credentials: true
+  }
+))
+
 mongodb();
 
 app.get('/', (req, res) => {
