@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = 5000
 const mongodb = require('./db')
+const cors = require('cors')
 
 app.use((req,res,next)=>{
   res.setHeader("Access-Control-Allow-Origin","https://food-frontend-sand.vercel.app/");
