@@ -5,7 +5,7 @@ const mongodb = require('./db')
 const cors = require('cors')
 
 app.use((req,res,next)=>{
-  res.setHeader("Access-Control-Allow-Origin","https://food-frontend-sand.vercel.app");
+  res.setHeader("Access-Control-Allow-Origin","http://localhost:5173");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"

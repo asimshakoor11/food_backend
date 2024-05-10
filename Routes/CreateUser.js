@@ -18,69 +18,65 @@ router.post("/createuser", [
     body('password').isLength({ min: 5 })],
     async (req, res) => {
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+        let userData = await User.findOne({ email: req.body.email });
+
+        if (userData) {
+            return res.send({ message: "User Already Exist" })
         }
+        else {
 
-        const salt =  await bcrypt.genSalt(10)
-        const secPassword =  await bcrypt.hash(req.body.password, salt)
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.send({ message: "Name & Password must be > 5 characters" })
+            }
 
-        try {
-            await User.create({
-                name: req.body.name,
-                password: secPassword,
-                email: req.body.email,
-                location: req.body.location
-            })
-            res.json({ success: true })
-        } catch (error) {
-            console.log(error)
-            res.json({ success: false })
+            const salt = await bcrypt.genSalt(10)
+            const secPassword = await bcrypt.hash(req.body.password, salt)
 
-        }
-    })
+            try {
+                await User.create({
+                    name: req.body.name,
+                    password: secPassword,
+                    email: req.body.email,
+                    location: req.body.location
+                })
+                res.send({ message: "Signup Successfull!" })
+            } catch (error) {
+                console.log(error)
+                res.send({ message: "Signup Failed" })
 
-
-router.post("/loginuser",  [
-    body('email').isEmail(),
-    body('password').isLength({ min: 5 })],
-     async (req, res) => {
-    let email = req.body.email
-
-    const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
-
-    try {
-        let userData = await User.findOne({ email });
-        if (!userData) {
-            return res.status(400).json({ errors: "Invalid email" });
-        }
-
-        const pwdcompare = await bcrypt.compare(req.body.password, userData.password)
-        if (!pwdcompare) {
-            
-            return res.status(400).json({ errors: "Invalid password" });
-        }
-
-        const data = {
-            user:{
-                id:userData.id
             }
         }
 
-        const authToken = jwt.sign(data, jwtSecret)
+    })
 
-        return res.json({ success: true, authToken:authToken })
 
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false })
+router.post("/loginuser", [
+    body('email').isEmail(),
+    body('password').isLength({ min: 5 })],
+    async (req, res) => {
+        let email = req.body.email
 
-    }
-})
+        let userData = await User.findOne({ email });
+
+        if (userData) {
+            const pwdcompare = await bcrypt.compare(req.body.password, userData.password)
+            if (!pwdcompare) {
+                return res.send({ message: "Password didn't match" })
+            } else {
+                const data = {
+                    user: {
+                        id: userData.id
+                    }
+                }
+
+                const authToken = jwt.sign(data, jwtSecret)
+
+                return res.send({ message: "Login Successfull", authToken: authToken })
+            }
+        } else {
+            return res.send({ message: "User Not Exist" })
+        }
+    })
 
 module.exports = router;
